@@ -8,8 +8,8 @@ jobs:
         run: git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
       - name: Patch Blitz target for BMP388
         run: |
-          sed -i 's/USE_BARO_DPS310/USE_BARO_BMP388/g' src/main/target/IFLIGHT_BLITZ_F722/target.h
-          cat src/main/target/IFLIGHT_BLITZ_F722/target.h
+          find . -name "target.h" | xargs grep -l "USE_BARO_DPS310" 
+          sed -i 's/USE_BARO_DPS310/USE_BARO_BMP388/g' $(find . -name "target.h" | xargs grep -l "USE_BARO_DPS310")
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
