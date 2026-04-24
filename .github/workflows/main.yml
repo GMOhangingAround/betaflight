@@ -12,7 +12,7 @@ jobs:
         run: make arm_sdk_install
       - name: Build
         run: |
-          make TARGET=STM32F7X2_IFLIGHT_BLITZ_F722 EXTRA_FLAGS="-DUSE_BARO_I2C_BMP388"
+          make TARGET=IFLIGHT_BLITZ_F722 EXTRA_FLAGS="-DUSE_BARO_I2C_BMP388"
       - name: Upload hex
         uses: actions/upload-artifact@v4
         with:
