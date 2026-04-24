@@ -1,16 +1,14 @@
 name: Build BMI270 Firmware
-
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install toolchain
+      - name: Checkout 4.5.1
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-arm-none-eabi
+          git fetch --tags
+          git checkout 4.5.1
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
