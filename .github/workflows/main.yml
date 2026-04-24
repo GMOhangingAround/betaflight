@@ -6,11 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: '4.5.1'
-          fetch-depth: 0
-          fetch-tags: true
+      - name: Clone Betaflight 4.5.1
+        run: |
+          git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
