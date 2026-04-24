@@ -1,14 +1,14 @@
 name: Build BMI270 Firmware
+
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Checkout 4.5.1
-        run: |
-          git fetch --tags
-          git checkout 4.5.1
+        with:
+          ref: '4.5.1'
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
@@ -17,5 +17,5 @@ jobs:
       - name: Upload hex
         uses: actions/upload-artifact@v4
         with:
-          name: betaflight_BMI270_STM32F7X2
+          name: betaflight_4.5.1_STM32F7X2
           path: obj/*.hex
