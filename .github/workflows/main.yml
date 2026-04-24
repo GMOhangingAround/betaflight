@@ -7,15 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Betaflight 4.5.1
-        run: |
-          git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
+        run: git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
-        run: |
-          make TARGET=STM32F7X2 EXTRA_FLAGS="-DUSE_BARO_I2C_BMP388"
+        run: make TARGET=STM32F7X2 EXTRA_FLAGS="-DUSE_ACCGYRO_BMI270 -DUSE_BARO_I2C_BMP388"
       - name: Upload hex
         uses: actions/upload-artifact@v4
         with:
-          name: betaflight_4.5.1_STM32F7X2
+          name: betaflight_4.5.1_BMI270_STM32F7X2
           path: obj/*.hex
