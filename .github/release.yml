@@ -1,32 +1,19 @@
 name: Build Custom FC Firmware
-
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Betaflight 4.5.1
         run: git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
-
       - name: Patch Blitz target for BMP388
         run: |
-          # 1. Remove the default DPS310 definition
-          sed -i '/USE_BARO_DPS310/d' src/main/target/IFLIGHT_BLITZ_F722/target.h
-          
-          # 2. Add I2C support for BMP388 (The driver is already there, we just need to link it to I2C)
-          echo "#define USE_BARO_I2C_BMP388" >> src/main/target/IFLIGHT_BLITZ_F722/target.h
-          
-          # 3. Ensure I2C1 is enabled for your B10/B11 pins
-          echo "#define USE_I2C" >> src/main/target/IFLIGHT_BLITZ_F722/target.h
-          echo "#define USE_I2C_DEVICE_1" >> src/main/target/IFLIGHT_BLITZ_F722/target.h
-
+          sed -i 's/USE_BARO_DPS310/USE_BARO_BMP388/g' src/main/target/IFLIGHT_BLITZ_F722/target.h
+          cat src/main/target/IFLIGHT_BLITZ_F722/target.h
       - name: Install correct ARM SDK
         run: make arm_sdk_install
-
       - name: Build
-        run: make IFLIGHT_BLITZ_F722
-
+        run: make TARGET=IFLIGHT_BLITZ_F722
       - name: Upload hex
         uses: actions/upload-artifact@v4
         with:
