@@ -1,0 +1,21 @@
+name: Build BMI270 Firmware
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi
+      - name: Build
+        run: |
+          make TARGET=STM32F7X2 EXTRA_FLAGS="-DUSE_ACCGYRO_BMI270 -DUSE_BARO_I2C_BMP388"
+      - name: Upload hex
+        uses: actions/upload-artifact@v3
+        with:
+          name: betaflight_BMI270_STM32F7X2
+          path: obj/*.hex
