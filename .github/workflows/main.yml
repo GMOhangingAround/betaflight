@@ -10,6 +10,7 @@ jobs:
         with:
           ref: '4.5.1'
           fetch-depth: 0
+          fetch-tags: true
       - name: Install correct ARM SDK
         run: make arm_sdk_install
       - name: Build
