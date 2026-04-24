@@ -1,24 +1,23 @@
-changelog:
-  exclude:
-    labels:
-      - "cleanup"
-  categories:
-    - title: Features
-      labels:
-        - "RN: MAJOR FEATURE"
-        - "RN: MINOR FEATURE"
-    - title: Improvements
-      labels:
-        - "RN: IMPROVEMENT"
-        - "RN: SAFETY IMPROVEMENT"
-        - "RN: REFACTORING"
-    - title: Fixes
-      labels: 
-        - "RN: BUGFIX"
-    - title: Targets
-      labels:
-        - "RN: NEW TARGET"
-        - "RN: TARGET UPDATE"
-    - title: Known Issues
-      labels:
-        - BUG
+name: Build Custom FC Firmware
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Betaflight 4.5.1
+        run: git clone --branch 4.5.1 --depth 1 https://github.com/betaflight/betaflight.git .
+      - name: Patch Blitz target for BMP388
+        run: |
+          sed -i 's/USE_BARO_DPS310/USE_BARO_BMP388/g' src/main/target/IFLIGHT_BLITZ_F722/target.h
+          cat src/main/target/IFLIGHT_BLITZ_F722/target.h
+      - name: Install correct ARM SDK
+        run: make arm_sdk_install
+      - name: Build
+        run: make TARGET=IFLIGHT_BLITZ_F722
+      - name: Upload hex
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight_4.5.1_BLITZ_BMP388
+          path: obj/*.hex
